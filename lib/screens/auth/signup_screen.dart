@@ -62,112 +62,99 @@ class _SignupScreenState extends State<SignupScreen> {
         ),
         child: SafeArea(
           child: SingleChildScrollView(
-            child: Container(
-              height: MediaQuery.of(context).size.height,
-              padding: EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 40),
-                  // App Logo
-                  Center(
-                    child: Container(
-                      width: 120,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        color: accentGreen.withOpacity(0.2),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Icon(
-                          Icons.eco_rounded,
-                          size: 70,
-                          color: primaryGreen,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height,
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 40),
+                    Center(
+                      child: Container(
+                        width: 120,
+                        height: 120,
+                        decoration: BoxDecoration(
+                          color: accentGreen.withOpacity(0.2),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: Icon(
+                            Icons.eco_rounded,
+                            size: 70,
+                            color: primaryGreen,
+                          ),
                         ),
                       ),
+                    ).animate().fadeIn(duration: 600.ms).scale(delay: 200.ms),
+
+                    SizedBox(height: 40),
+                    Text(
+                      'Create Account',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: textDarkColor,
+                      ),
+                    ).animate().fadeIn(duration: 500.ms).moveX(begin: -20, end: 0),
+
+                    SizedBox(height: 8),
+                    Text(
+                      'Join us in making the world greener',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: textLightColor,
+                      ),
+                    ).animate().fadeIn(duration: 500.ms, delay: 200.ms).moveX(begin: -20, end: 0),
+
+                    SizedBox(height: 40),
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          _buildInputField(
+                            controller: _nameController,
+                            label: "Full Name",
+                            icon: Icons.person_outline,
+                            validator: (val) => val!.isEmpty ? 'Name is required' : null,
+                          ).animate().fadeIn(duration: 400.ms, delay: 300.ms),
+
+                          SizedBox(height: 16),
+                          _buildInputField(
+                            controller: _emailController,
+                            label: "Email Address",
+                            icon: Icons.email_outlined,
+                            keyboardType: TextInputType.emailAddress,
+                            validator: (val) {
+                              if (val!.isEmpty) return 'Email is required';
+                              if (!_isValidEmail(val)) return 'Enter a valid email';
+                              return null;
+                            },
+                          ).animate().fadeIn(duration: 400.ms, delay: 400.ms),
+
+                          SizedBox(height: 16),
+                          _buildPasswordField().animate().fadeIn(duration: 400.ms, delay: 500.ms),
+
+                          SizedBox(height: 40),
+                          _buildSignupButton().animate().fadeIn(duration: 500.ms, delay: 600.ms),
+
+                          SizedBox(height: 20),
+                          _buildOrDivider().animate().fadeIn(duration: 400.ms, delay: 650.ms),
+
+                          SizedBox(height: 20),
+                          _buildGoogleSignupButton().animate().fadeIn(duration: 500.ms, delay: 700.ms),
+
+                          SizedBox(height: 24),
+                          _buildLoginLink().animate().fadeIn(duration: 400.ms, delay: 750.ms),
+                          SizedBox(height: 30),
+
+                        ],
+                      ),
                     ),
-                  ).animate().fadeIn(duration: 600.ms).scale(delay: 200.ms),
-
-                  SizedBox(height: 40),
-
-                  // Header
-                  Text(
-                    'Create Account',
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: textDarkColor,
-                    ),
-                  ).animate().fadeIn(duration: 500.ms).moveX(begin: -20, end: 0),
-
-                  SizedBox(height: 8),
-
-                  Text(
-                    'Join us in making the world greener',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: textLightColor,
-                    ),
-                  ).animate().fadeIn(duration: 500.ms, delay: 200.ms).moveX(begin: -20, end: 0),
-
-                  SizedBox(height: 40),
-
-                  // Form
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        // Name Field
-                        _buildInputField(
-                          controller: _nameController,
-                          label: "Full Name",
-                          icon: Icons.person_outline,
-                          validator: (val) => val!.isEmpty ? 'Name is required' : null,
-                        ).animate().fadeIn(duration: 400.ms, delay: 300.ms),
-
-                        SizedBox(height: 16),
-
-                        // Email Field
-                        _buildInputField(
-                          controller: _emailController,
-                          label: "Email Address",
-                          icon: Icons.email_outlined,
-                          keyboardType: TextInputType.emailAddress,
-                          validator: (val) {
-                            if (val!.isEmpty) return 'Email is required';
-                            if (!_isValidEmail(val)) return 'Enter a valid email';
-                            return null;
-                          },
-                        ).animate().fadeIn(duration: 400.ms, delay: 400.ms),
-
-                        SizedBox(height: 16),
-
-                        // Password Field
-                        _buildPasswordField().animate().fadeIn(duration: 400.ms, delay: 500.ms),
-
-                        SizedBox(height: 40),
-
-                        // Signup Button
-                        _buildSignupButton().animate().fadeIn(duration: 500.ms, delay: 600.ms),
-
-                        SizedBox(height: 20),
-
-                        // OR Divider
-                        _buildOrDivider().animate().fadeIn(duration: 400.ms, delay: 650.ms),
-
-                        SizedBox(height: 20),
-
-                        // Google Sign-up Button
-                        _buildGoogleSignupButton().animate().fadeIn(duration: 500.ms, delay: 700.ms),
-
-                        SizedBox(height: 24),
-
-                        // Login Text
-                        _buildLoginLink().animate().fadeIn(duration: 400.ms, delay: 750.ms),
-                      ],
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

@@ -4,11 +4,9 @@ import 'package:lottie/lottie.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({Key? key}) : super(key: key);
-
   @override
   State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
 }
-
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
     with SingleTickerProviderStateMixin {
   final TextEditingController _emailController = TextEditingController();
@@ -16,7 +14,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
   bool _isLoading = false;
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
-
   @override
   void initState() {
     super.initState();
@@ -68,7 +65,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
       }
     }
   }
-
   @override
   Widget build(BuildContext context) {
     // App theme colors
@@ -77,199 +73,101 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
     final Color backgroundColor = Colors.white;
 
     return Scaffold(
+      resizeToAvoidBottomInset: true, // Ensures proper layout when keyboard appears
       backgroundColor: backgroundColor,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: FadeTransition(
-              opacity: _fadeAnimation,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(height: 40),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              child: Padding(
+                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min, // Prevent unnecessary expansion
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(height: 40),
 
-                  // Back button
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: IconButton(
-                      icon: Icon(Icons.arrow_back_ios, color: primaryGreen),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  // Animation
-                  Center(
-                    child: Container(
-                      height: 180,
-                      width: 180,
-                      child: Lottie.network(
-                        'https://assets4.lottiefiles.com/packages/lf20_ebbrdpx5.json', // Forgot password animation
-                        fit: BoxFit.cover,
+                    // Back button
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: IconButton(
+                        icon: Icon(Icons.arrow_back_ios, color: primaryGreen),
+                        onPressed: () => Navigator.pop(context),
                       ),
                     ),
-                  ),
 
-                  const SizedBox(height: 30),
+                    const SizedBox(height: 20),
 
-                  // Title
-                  Text(
-                    'Forgot Password?',
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: primaryGreen,
-                      letterSpacing: 0.5,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  // Subtitle
-                  Text(
-                    'No worries! Enter your email address below and we\'ll send you a link to reset your password.',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey[600],
-                      height: 02,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-
-                  const SizedBox(height: 40),
-
-                  // Form
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        // Email field
-                        TextFormField(
-                          controller: _emailController,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: InputDecoration(
-                            hintText: 'Email Address',
-                            prefixIcon: Icon(Icons.email_outlined, color: primaryGreen),
-                            fillColor: Colors.grey[100],
-                            filled: true,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: primaryGreen, width: 2),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(vertical: 16),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your email address';
-                            }
-                            final emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-                            if (!emailRegExp.hasMatch(value)) {
-                              return 'Please enter a valid email address';
-                            }
-                            return null;
-                          },
+                    // Animation
+                    Center(
+                      child: Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.greenAccent,
+                          shape: BoxShape.circle,
                         ),
-
-                        const SizedBox(height: 24),
-
-                        // Submit button
-                        ElevatedButton(
-                          onPressed: _isLoading ? null : _submitForm,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: primaryGreen,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            elevation: 0,
-                          ),
-                          child: Container(
-                            width: double.infinity,
-                            child: Center(
-                              child: _isLoading
-                                  ? SizedBox(
-                                height: 24,
-                                width: 24,
-                                child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                                  strokeWidth: 2,
-                                ),
-                              )
-                                  : Text(
-                                'Reset Password',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
+                        child: Center(
+                          child: Icon(Icons.eco_rounded, size: 60, color: primaryGreen),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
 
-                  const SizedBox(height: 24),
+                    const SizedBox(height: 30),
 
-                  // Back to login
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.arrow_back, size: 16, color: primaryGreen),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Back to Login',
-                          style: TextStyle(
-                            color: primaryGreen,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
+                    // Title
+                    Text(
+                      'Forgot Password?',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: primaryGreen,
+                        letterSpacing: 0.5,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                  ),
 
-                  const SizedBox(height: 40),
+                    const SizedBox(height: 16),
 
-                  // Eco-friendly message
-                  Container(
-                    padding: EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: lightGreen.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: lightGreen, width: 1),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.eco, color: primaryGreen),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            'Thank you for choosing eco-friendly e-waste recycling!',
-                            style: TextStyle(
-                              color: primaryGreen,
-                              fontWeight: FontWeight.w500,
+                    // Form
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            controller: _emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            decoration: InputDecoration(
+                              hintText: 'Email Address',
+                              prefixIcon: Icon(Icons.email_outlined, color: primaryGreen),
                             ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your email address';
+                              }
+                              return null;
+                            },
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
 
-                  const SizedBox(height: 24),
-                ],
+                          const SizedBox(height: 24),
+
+                          ElevatedButton(
+                            onPressed: _isLoading ? null : _submitForm,
+                            child: _isLoading
+                                ? CircularProgressIndicator()
+                                : Text('Reset Password'),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 24),
+                  ],
+                ),
               ),
-            ),
-          ),
+            );
+          },
         ),
       ),
     );

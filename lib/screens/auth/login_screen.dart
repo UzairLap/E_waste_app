@@ -54,6 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,  // Prevents keyboard overflow
       backgroundColor: backgroundColor,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.dark.copyWith(
@@ -61,145 +62,132 @@ class _LoginScreenState extends State<LoginScreen> {
           statusBarIconBrightness: Brightness.dark,
         ),
         child: SafeArea(
-          child: SingleChildScrollView(
-            child: Container(
-              height: MediaQuery.of(context).size.height,
-              padding: EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Back Button
-                  Padding(
-                    padding: EdgeInsets.only(top: 16),
-                    child: IconButton(
-                      icon: Icon(Icons.arrow_back_ios, color: textDarkColor),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ).animate().fadeIn(duration: 300.ms),
-
-                  SizedBox(height: 20),
-
-                  // App Logo
-                  Center(
-                    child: Container(
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        color: accentGreen.withOpacity(0.2),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Icon(
-                          Icons.eco_rounded,
-                          size: 60,
-                          color: primaryGreen,
-                        ),
-                      ),
-                    ),
-                  ).animate().fadeIn(duration: 600.ms).scale(delay: 200.ms),
-
-                  SizedBox(height: 40),
-
-                  // Header
-                  Text(
-                    'Welcome Back',
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: textDarkColor,
-                    ),
-                  ).animate().fadeIn(duration: 500.ms).moveX(begin: -20, end: 0),
-
-                  SizedBox(height: 8),
-
-                  Text(
-                    'Login to continue your green journey',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: textLightColor,
-                    ),
-                  ).animate().fadeIn(duration: 500.ms, delay: 200.ms).moveX(begin: -20, end: 0),
-
-                  SizedBox(height: 40),
-
-                  // Form
-                  Form(
-                    key: _formKey,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: constraints.maxHeight,  // Makes content stretch but not overflow
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center, // Keeps UI centered
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Email Field
-                        _buildInputField(
-                          controller: _emailController,
-                          label: "Email Address",
-                          icon: Icons.email_outlined,
-                          keyboardType: TextInputType.emailAddress,
-                          validator: (val) {
-                            if (val!.isEmpty) return 'Email is required';
-                            if (!_isValidEmail(val)) return 'Enter a valid email';
-                            return null;
-                          },
-                        ).animate().fadeIn(duration: 400.ms, delay: 300.ms),
-
                         SizedBox(height: 16),
 
-                        // Password Field
-                        _buildPasswordField().animate().fadeIn(duration: 400.ms, delay: 400.ms),
+                        // Back Button
+                        IconButton(
+                          icon: Icon(Icons.arrow_back_ios, color: textDarkColor),
+                          onPressed: () => Navigator.pop(context),
+                        ),
 
-                        SizedBox(height: 10),
+                        SizedBox(height: 20),
 
-                        // Forgot Password
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: TextButton(
-                            onPressed: () {
-                              // Handle forgot password
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => ForgotPasswordScreen()),
-                              );
-                            },
-                            child: Text(
-                              "Forgot Password?",
-                              style: TextStyle(
-                                color: primaryGreen,
-                                fontWeight: FontWeight.w600,
-                              ),
+                        // App Logo
+                        Center(
+                          child: Container(
+                            width: 100,
+                            height: 100,
+                            decoration: BoxDecoration(
+                              color: accentGreen.withOpacity(0.2),
+                              shape: BoxShape.circle,
                             ),
-
+                            child: Center(
+                              child: Icon(Icons.eco_rounded, size: 60, color: primaryGreen),
+                            ),
                           ),
-                          
-                        ).animate().fadeIn(duration: 400.ms, delay: 450.ms),
+                        ),
 
-                        SizedBox(height: 30),
+                        SizedBox(height: 40),
 
-                        // Login Button
-                        _buildLoginButton().animate().fadeIn(duration: 500.ms, delay: 500.ms),
+                        // Header
+                        Text(
+                          'Welcome Back',
+                          style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: textDarkColor),
+                        ),
 
-                        SizedBox(height: 20),
+                        SizedBox(height: 8),
 
-                        // OR Divider
-                        _buildOrDivider().animate().fadeIn(duration: 400.ms, delay: 550.ms),
+                        Text(
+                          'Login to continue your green journey',
+                          style: TextStyle(fontSize: 16, color: textLightColor),
+                        ),
 
-                        SizedBox(height: 20),
+                        SizedBox(height: 40),
 
-                        // Google Sign-In Button
-                        _buildGoogleSignInButton().animate().fadeIn(duration: 500.ms, delay: 600.ms),
+                        // Form
+                        Form(
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              _buildInputField(
+                                controller: _emailController,
+                                label: "Email Address",
+                                icon: Icons.email_outlined,
+                                keyboardType: TextInputType.emailAddress,
+                                validator: (val) {
+                                  if (val!.isEmpty) return 'Email is required';
+                                  if (!_isValidEmail(val)) return 'Enter a valid email';
+                                  return null;
+                                },
+                              ),
 
-                        SizedBox(height: 24),
+                              SizedBox(height: 16),
 
-                        // Sign Up Link
-                        _buildSignUpLink().animate().fadeIn(duration: 400.ms, delay: 650.ms),
+                              _buildPasswordField(),
+
+                              SizedBox(height: 10),
+
+                              // Forgot Password
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => ForgotPasswordScreen()),
+                                    );
+                                  },
+                                  child: Text(
+                                    "Forgot Password?",
+                                    style: TextStyle(color: primaryGreen, fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                              ),
+
+                              SizedBox(height: 30),
+
+                              _buildLoginButton(),
+
+                              SizedBox(height: 20),
+
+                              _buildOrDivider(),
+
+                              SizedBox(height: 20),
+
+                              _buildGoogleSignInButton(),
+
+                              SizedBox(height: 24),
+
+                              _buildSignUpLink(),
+                              SizedBox(height: 30),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                ],
-              ),
-            ),
+                ),
+              );
+            },
           ),
         ),
       ),
     );
   }
+
 
   Widget _buildInputField({
     required TextEditingController controller,
