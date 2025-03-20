@@ -335,22 +335,22 @@ class _SignupScreenState extends State<SignupScreen> {
         icon: Container(
           height: 24,
           width: 24,
-          child: Image.network(
-            'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg',
-            height: 24,
-            width: 24,
-            errorBuilder: (context, error, stackTrace) {
-              // Fallback to a simple G icon if image fails to load
-              return Text(
-                'G',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              );
-            },
-          ),
+          // child: Image.network(
+          //   'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg',
+          //   height: 24,
+          //   width: 24,
+          //   errorBuilder: (context, error, stackTrace) {
+          //     // Fallback to a simple G icon if image fails to load
+          //     return Text(
+          //       'G',
+          //       style: TextStyle(
+          //         color: Colors.red,
+          //         fontWeight: FontWeight.bold,
+          //         fontSize: 18,
+          //       ),
+          //     );
+          //   },
+          // ),
         ),
         label: Text(
           "Continue with Google",
@@ -392,6 +392,8 @@ class _SignupScreenState extends State<SignupScreen> {
           child: Text(
             "Log In",
             style: TextStyle(
+              decoration: TextDecoration.underline,
+              decorationColor: Colors.green,
               color: primaryGreen,
               fontWeight: FontWeight.bold,
               fontSize: 15,

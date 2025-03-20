@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'screens/splash_screen.dart';
 import 'screens/auth/signup_screen.dart';
 import 'screens/auth/login_screen.dart';
-import 'screens/home.dart';
+import 'screens/home_screen.dart';
 
 void main() {
   runApp(MaterialApp(

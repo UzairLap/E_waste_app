@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../home.dart';
+import '../home_screen.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'forgot_password.dart';
 
@@ -104,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                         // Header
                         Text(
-                          'Welcome Back',
+                          'Welcome Back!',
                           style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: textDarkColor),
                         ),
 
@@ -138,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                               _buildPasswordField(),
 
-                              SizedBox(height: 10),
+                              // SizedBox(height: 5),
 
                               // Forgot Password
                               Align(
@@ -150,9 +150,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                       MaterialPageRoute(builder: (context) => ForgotPasswordScreen()),
                                     );
                                   },
-                                  child: Text(
-                                    "Forgot Password?",
-                                    style: TextStyle(color: primaryGreen, fontWeight: FontWeight.w600),
+
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Text(
+                                      "Forgot password?",
+                                      style: TextStyle(color: primaryGreen, fontWeight: FontWeight.w400 , decoration: TextDecoration.underline , decorationColor: Colors.green),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -359,26 +363,22 @@ class _LoginScreenState extends State<LoginScreen> {
       width: double.infinity,
       height: 55,
       child: OutlinedButton.icon(
-        icon: Container(
-          height: 24,
-          width: 24,
-          child: Image.network(
-            'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg',
-            height: 24,
-            width: 24,
-            errorBuilder: (context, error, stackTrace) {
-              // Fallback to a simple G icon if image fails to load
-              return Text(
-                'G',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              );
-            },
-          ),
-        ),
+        // icon: Image.network(
+        //   'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg',
+        //   height: 24,
+        //   width: 24,
+        //   errorBuilder: (context, error, stackTrace) {
+        //     // Fallback to a simple G icon if image fails to load
+        //     return Text(
+        //       'G',
+        //       style: TextStyle(
+        //         color: Colors.red,
+        //         fontWeight: FontWeight.bold,
+        //         fontSize: 18,
+        //       ),
+        //     );
+        //   },
+        // ),
         label: Text(
           "Continue with Google",
           style: TextStyle(

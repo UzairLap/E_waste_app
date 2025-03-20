@@ -226,15 +226,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                     },
                     child: Column(
                       children: const [
-                        Text(
-                          "Welcome to",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 24,
-                            color: Color(0xFF616161), // Darker gray
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
+                        // Text(
+                        //   "Welcome to",
+                        //   textAlign: TextAlign.left,
+                        //   style: TextStyle(
+                        //     fontSize: 24,
+                        //     color: Color(0xFF616161), // Darker gray
+                        //     fontWeight: FontWeight.w700,
+                        //   ),
+                        // ),
                         SizedBox(height: 8),
                         Text(
                           "EcoRecycle",
@@ -273,8 +273,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                         ),
                       );
                     },
-                    child: const Text(
-                      "Join us in the journey to transform electronic waste into a sustainable future.",
+
+                    child:
+                    const Text(
+                      "Welcomes you in the journey to transform electronic waste into a sustainable future!",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 17, // Slightly larger for better readability
