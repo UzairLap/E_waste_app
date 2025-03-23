@@ -1,10 +1,13 @@
+import 'package:e_waste_app/screens/Home%20Screen/schedule_pickup_page.dart';
 import 'package:flutter/material.dart';
+import '../../widgets/bottom_navbar.dart';
 import 'app_bar.dart'; // Import your CollapsibleAppBar file
 import 'your_impact.dart'; // Import your YourImpactSection file
 import '../../widgets/pickup_card.dart'; // Import the enhanced button we just created
 import 'package:google_fonts/google_fonts.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'previous_recycle_section.dart'; // Import the PreviousRecyclesSection file
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -26,6 +29,25 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   final double _waterSaved = 4550.0; // liters
   final double _energySaved = 341.5; // kWh
   final double _co2Reduced = 125.8; // kg
+
+  // Sample data for previous recycles
+  final List<RecycleOrder> _previousOrders = [
+    RecycleOrder(
+      orderId: '8742',
+      dateTime: DateTime.now().subtract(const Duration(days: 5)),
+      status: 'Completed',
+      recycledItems: [
+        RecycledItem(name: 'iPhone 11', type: 'phone'),
+        RecycledItem(name: 'Samsung TV', type: 'tv'),
+      ],
+      amountEarned: 1250.00,
+      review: OrderReview(
+        rating: 4.5,
+        comment: 'Great service! The pickup agent was very professional and on time.',
+      ),
+    ),
+
+  ];
 
   @override
   void initState() {
@@ -65,12 +87,13 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   }
 
   void _navigateToPickupForm() {
-    // Navigate to pickup details form
-    print('Navigating to pickup form');
-    // Here we're setting the bottom nav index to the schedule pickup tab (2)
-    setState(() {
-      _currentIndex = 2;
-    });
+    // Navigate to the SchedulePickupPage
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SchedulePickupPage(), // Replace with your actual page
+      ),
+    );
   }
 
   void _onBottomNavTap(int index) {
@@ -228,6 +251,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   ),
                 ),
               ),
+              // Add PreviousRecyclesSection below the Schedule Pickup button
+              SliverToBoxAdapter(
+                child: PreviousRecyclesSection(previousOrders: _previousOrders),
+              ),
               // Other content items
               SliverList(
                 delegate: SliverChildBuilderDelegate(
@@ -288,14 +315,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
               },
               items: [
                 SalomonBottomBarItem(
-                  icon: const Icon(Icons.home_outlined),
-                  activeIcon: const Icon(Icons.home),
+                  icon: const Icon(Icons.home_outlined , size: 26),
+                  activeIcon: const Icon(Icons.home,size: 26),
                   title: const Text("Home"),
                   selectedColor: const Color(0xFF4CAF50),
                 ),
                 SalomonBottomBarItem(
-                  icon: const Icon(Icons.location_on_outlined),
-                  activeIcon: const Icon(Icons.location_on),
+                  icon: const Icon(Icons.location_on_outlined,size: 26),
+                  activeIcon: const Icon(Icons.location_on,size: 26),
                   title: const Text("Location"),
                   selectedColor: const Color(0xFF4CAF50),
                 ),
@@ -306,14 +333,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   selectedColor: Colors.transparent,
                 ),
                 SalomonBottomBarItem(
-                  icon: const Icon(Icons.menu_book_outlined),
-                  activeIcon: const Icon(Icons.menu_book),
+                  icon: const Icon(Icons.menu_book_outlined,size: 26),
+                  activeIcon: const Icon(Icons.menu_book,size: 26),
                   title: const Text("Learn"),
                   selectedColor: const Color(0xFF4CAF50),
                 ),
                 SalomonBottomBarItem(
-                  icon: const Icon(Icons.people_outline),
-                  activeIcon: const Icon(Icons.people),
+                  icon: const Icon(Icons.people_outline,size: 25),
+                  activeIcon: const Icon(Icons.people,size: 25),
                   title: const Text("Community"),
                   selectedColor: const Color(0xFF4CAF50),
                 ),

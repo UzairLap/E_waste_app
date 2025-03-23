@@ -121,7 +121,7 @@ class _MainLayoutState extends State<MainLayout> with SingleTickerProviderStateM
   final List<Widget> _pages = [
     const HomePage(),
     const LocationPage(),
-    const SchedulePickupPage(),
+
     const LearnPage(),
     const CommunityPage(),
   ];
@@ -222,11 +222,7 @@ class LocationPage extends StatelessWidget {
   Widget build(BuildContext context) => const Center(child: Text('Location Page'));
 }
 
-class SchedulePickupPage extends StatelessWidget {
-  const SchedulePickupPage({Key? key}) : super(key: key);
-  @override
-  Widget build(BuildContext context) => const Center(child: Text('Schedule Pickup'));
-}
+
 
 class LearnPage extends StatelessWidget {
   const LearnPage({Key? key}) : super(key: key);

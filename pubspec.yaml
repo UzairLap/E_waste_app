@@ -45,6 +45,13 @@ dependencies:
   flutter_staggered_animations: ^1.1.1
   shimmer: ^3.0.0
   salomon_bottom_bar: ^3.3.2
+  intl: ^0.20.2
+  timeline_tile: ^2.0.0
+  flutter_rating_bar: ^4.0.1
+  image_picker: ^1.1.2
+  geolocator: ^13.0.3
+  geocoding: ^3.0.0
+  carousel_slider: ^5.0.0
 
 dev_dependencies:
   flutter_test:

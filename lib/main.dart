@@ -17,12 +17,13 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'E-Waste App',
 
-      initialRoute: '/',
+      initialRoute: '/home',
       routes: {
+        '/home': (context) => HomeScreen(),
         '/': (context) => SplashScreen(),
         '/signup': (context) => SignupScreen(),
         '/login': (context) => LoginScreen(),
-        '/home': (context) => HomeScreen(),
+
       },
     );
   }
