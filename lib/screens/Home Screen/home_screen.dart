@@ -1,4 +1,5 @@
 import 'package:e_waste_app/screens/Home%20Screen/schedule_pickup_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/bottom_navbar.dart';
 import 'app_bar.dart'; // Import your CollapsibleAppBar file
@@ -16,7 +17,10 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
+  User? user = FirebaseAuth.instance.currentUser;
+  String userName = "Uzair";
   final ScrollController _scrollController = ScrollController();
   double _scrollOffset = 0.0;
   int _currentIndex = 0;
@@ -43,15 +47,19 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       amountEarned: 1250.00,
       review: OrderReview(
         rating: 4.5,
-        comment: 'Great service! The pickup agent was very professional and on time.',
+        comment:
+            'Great service! The pickup agent was very professional and on time.',
       ),
     ),
-
   ];
 
   @override
   void initState() {
     super.initState();
+    setState(() {
+      String userName = user?.displayName ?? "Guest";
+    });
+    
     _scrollController.addListener(_onScroll);
     _animationController = AnimationController(
       vsync: this,
@@ -91,7 +99,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SchedulePickupPage(), // Replace with your actual page
+        builder:
+            (context) => SchedulePickupPage(), // Replace with your actual page
       ),
     );
   }
@@ -130,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                 collapsedHeight: 60.0,
                 pinned: true,
                 flexibleSpace: CollapsibleAppBar(
-                  userName: 'Shantanu Kulkarni',
+                  userName: userName,
                   appName: 'EcoApp',
                   userPoints: 1200,
                   userStreak: 7,
@@ -214,7 +223,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                       // Details below button
                       Container(
                         margin: EdgeInsets.only(top: 16),
-                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.grey.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(12),
@@ -258,7 +270,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
               // Other content items
               SliverList(
                 delegate: SliverChildBuilderDelegate(
-                      (context, index) {
+                  (context, index) {
                     return Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
@@ -274,16 +286,48 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           ),
 
           // Location Tab
-          Center(child: Text('Location Page', style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w600))),
+          Center(
+            child: Text(
+              'Location Page',
+              style: GoogleFonts.poppins(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
 
           // Schedule Pickup Tab
-          Center(child: Text('Schedule Pickup Page', style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w600))),
+          Center(
+            child: Text(
+              'Schedule Pickup Page',
+              style: GoogleFonts.poppins(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
 
           // Learn Tab
-          Center(child: Text('Learn Page', style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w600))),
+          Center(
+            child: Text(
+              'Learn Page',
+              style: GoogleFonts.poppins(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
 
           // Community Tab
-          Center(child: Text('Community Page', style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w600))),
+          Center(
+            child: Text(
+              'Community Page',
+              style: GoogleFonts.poppins(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
         ],
       ),
       bottomNavigationBar: Container(
@@ -315,14 +359,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
               },
               items: [
                 SalomonBottomBarItem(
-                  icon: const Icon(Icons.home_outlined , size: 26),
-                  activeIcon: const Icon(Icons.home,size: 26),
+                  icon: const Icon(Icons.home_outlined, size: 26),
+                  activeIcon: const Icon(Icons.home, size: 26),
                   title: const Text("Home"),
                   selectedColor: const Color(0xFF4CAF50),
                 ),
                 SalomonBottomBarItem(
-                  icon: const Icon(Icons.location_on_outlined,size: 26),
-                  activeIcon: const Icon(Icons.location_on,size: 26),
+                  icon: const Icon(Icons.location_on_outlined, size: 26),
+                  activeIcon: const Icon(Icons.location_on, size: 26),
                   title: const Text("Location"),
                   selectedColor: const Color(0xFF4CAF50),
                 ),
@@ -333,14 +377,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   selectedColor: Colors.transparent,
                 ),
                 SalomonBottomBarItem(
-                  icon: const Icon(Icons.menu_book_outlined,size: 26),
-                  activeIcon: const Icon(Icons.menu_book,size: 26),
+                  icon: const Icon(Icons.menu_book_outlined, size: 26),
+                  activeIcon: const Icon(Icons.menu_book, size: 26),
                   title: const Text("Learn"),
                   selectedColor: const Color(0xFF4CAF50),
                 ),
                 SalomonBottomBarItem(
-                  icon: const Icon(Icons.people_outline,size: 25),
-                  activeIcon: const Icon(Icons.people,size: 25),
+                  icon: const Icon(Icons.people_outline, size: 25),
+                  activeIcon: const Icon(Icons.people, size: 25),
                   title: const Text("Community"),
                   selectedColor: const Color(0xFF4CAF50),
                 ),

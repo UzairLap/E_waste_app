@@ -1,8 +1,11 @@
+import 'package:e_waste_app/UiHelper/snackbar_message.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../Home Screen/home_screen.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'forgot_password.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -15,6 +18,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
   bool _isLoading = false;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   // Main app theme colors - matches signup screen
   final Color primaryGreen = Color(0xFF4CAF50);
@@ -22,6 +27,29 @@ class _LoginScreenState extends State<LoginScreen> {
   final Color backgroundColor = Colors.white;
   final Color textDarkColor = Color(0xFF2E7D32);
   final Color textLightColor = Color(0xFF81C784);
+
+  Future<void> _loginUserWithEmailAndPassword() async {
+    setState(() => _isLoading = false);
+    if (_formKey.currentState!.validate()) {
+      try {
+        final userCredential = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(
+              email: _emailController.text.trim(),
+              password: _passwordController.text.trim(),
+            );
+        showSnackBar(context, "User LogedIn Successfully!", true);
+
+        setState(() => _isLoading = false);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => HomeScreen()),
+    );
+      } on FirebaseAuthException catch (e) {
+        showSnackBar(context, e.message.toString(), false);
+        setState(() => _isLoading = false);
+      }
+    }
+  }
 
   @override
   void dispose() {
@@ -35,26 +63,47 @@ class _LoginScreenState extends State<LoginScreen> {
     return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
   }
 
-  void _signInWithGoogle() async {
+   void _signInWithGoogle() async {
     // Implement Google Sign-In logic here
     setState(() => _isLoading = true);
 
-    // Simulate API call delay
-    await Future.delayed(Duration(seconds: 1));
+    try {
 
-    setState(() => _isLoading = false);
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        showSnackBar(context,"Google Sign-In cancelled.", false);
+        return;
+      }
 
-    // Navigate to Home Page after successful login
-    Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen())
+     
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+
+      final OAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      
+      await _auth.signInWithCredential(credential);
+      showSnackBar(context,"Google Sign-In successful!", true);
+      setState(() => _isLoading = false);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => HomeScreen()),
     );
+    } catch (e) {
+      showSnackBar(context,"Google Sign-In failed: $e", false);
+    }
+
+
+    
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,  // Prevents keyboard overflow
+      resizeToAvoidBottomInset: true, // Prevents keyboard overflow
       backgroundColor: backgroundColor,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.dark.copyWith(
@@ -67,19 +116,25 @@ class _LoginScreenState extends State<LoginScreen> {
               return SingleChildScrollView(
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
-                    minHeight: constraints.maxHeight,  // Makes content stretch but not overflow
+                    minHeight:
+                        constraints
+                            .maxHeight, // Makes content stretch but not overflow
                   ),
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 24),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center, // Keeps UI centered
+                      mainAxisAlignment:
+                          MainAxisAlignment.center, // Keeps UI centered
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: 16),
 
                         // Back Button
                         IconButton(
-                          icon: Icon(Icons.arrow_back_ios, color: textDarkColor),
+                          icon: Icon(
+                            Icons.arrow_back_ios,
+                            color: textDarkColor,
+                          ),
                           onPressed: () => Navigator.pop(context),
                         ),
 
@@ -95,7 +150,11 @@ class _LoginScreenState extends State<LoginScreen> {
                               shape: BoxShape.circle,
                             ),
                             child: Center(
-                              child: Icon(Icons.eco_rounded, size: 60, color: primaryGreen),
+                              child: Icon(
+                                Icons.eco_rounded,
+                                size: 60,
+                                color: primaryGreen,
+                              ),
                             ),
                           ),
                         ),
@@ -105,7 +164,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         // Header
                         Text(
                           'Welcome Back!',
-                          style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: textDarkColor),
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: textDarkColor,
+                          ),
                         ),
 
                         SizedBox(height: 8),
@@ -129,7 +192,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 keyboardType: TextInputType.emailAddress,
                                 validator: (val) {
                                   if (val!.isEmpty) return 'Email is required';
-                                  if (!_isValidEmail(val)) return 'Enter a valid email';
+                                  if (!_isValidEmail(val))
+                                    return 'Enter a valid email';
                                   return null;
                                 },
                               ),
@@ -147,7 +211,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   onPressed: () {
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => ForgotPasswordScreen()),
+                                      MaterialPageRoute(
+                                        builder:
+                                            (context) => ForgotPasswordScreen(),
+                                      ),
                                     );
                                   },
 
@@ -155,7 +222,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                     padding: const EdgeInsets.all(4.0),
                                     child: Text(
                                       "Forgot password?",
-                                      style: TextStyle(color: primaryGreen, fontWeight: FontWeight.w400 , decoration: TextDecoration.underline , decorationColor: Colors.green),
+                                      style: TextStyle(
+                                        color: primaryGreen,
+                                        fontWeight: FontWeight.w400,
+                                        decoration: TextDecoration.underline,
+                                        decorationColor: Colors.green,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -192,7 +264,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-
   Widget _buildInputField({
     required TextEditingController controller,
     required String label,
@@ -211,7 +282,10 @@ class _LoginScreenState extends State<LoginScreen> {
         prefixIcon: Icon(icon, color: primaryGreen),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: textLightColor.withOpacity(0.5), width: 1.5),
+          borderSide: BorderSide(
+            color: textLightColor.withOpacity(0.5),
+            width: 1.5,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -257,7 +331,10 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: textLightColor.withOpacity(0.5), width: 1.5),
+          borderSide: BorderSide(
+            color: textLightColor.withOpacity(0.5),
+            width: 1.5,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -282,22 +359,7 @@ class _LoginScreenState extends State<LoginScreen> {
       width: double.infinity,
       height: 55,
       child: ElevatedButton(
-        onPressed: _isLoading ? null : () async {
-          if (_formKey.currentState!.validate()) {
-            setState(() => _isLoading = true);
-
-            // Simulate API call delay
-            await Future.delayed(Duration(seconds: 1));
-
-            setState(() => _isLoading = false);
-
-            // Navigate to Home Page after successful login
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => HomeScreen())
-            );
-          }
-        },
+        onPressed: _isLoading ? null : _loginUserWithEmailAndPassword,
         style: ElevatedButton.styleFrom(
           backgroundColor: primaryGreen,
           foregroundColor: Colors.white,
@@ -307,23 +369,24 @@ class _LoginScreenState extends State<LoginScreen> {
             borderRadius: BorderRadius.circular(15),
           ),
         ),
-        child: _isLoading
-            ? SizedBox(
-          width: 24,
-          height: 24,
-          child: CircularProgressIndicator(
-            color: Colors.white,
-            strokeWidth: 2,
-          ),
-        )
-            : Text(
-          "LOGIN",
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1,
-          ),
-        ),
+        child:
+            _isLoading
+                ? SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 2,
+                  ),
+                )
+                : Text(
+                  "LOGIN",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1,
+                  ),
+                ),
       ),
     );
   }
@@ -331,12 +394,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildOrDivider() {
     return Row(
       children: [
-        Expanded(
-          child: Divider(
-            color: Colors.grey.shade400,
-            thickness: 1,
-          ),
-        ),
+        Expanded(child: Divider(color: Colors.grey.shade400, thickness: 1)),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16),
           child: Text(
@@ -348,12 +406,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
         ),
-        Expanded(
-          child: Divider(
-            color: Colors.grey.shade400,
-            thickness: 1,
-          ),
-        ),
+        Expanded(child: Divider(color: Colors.grey.shade400, thickness: 1)),
       ],
     );
   }
